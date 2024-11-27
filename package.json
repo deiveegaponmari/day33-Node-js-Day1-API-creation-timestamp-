@@ -10,7 +10,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "date-fns": "^4.1.0",
     "express": "^4.21.1",
-    "nodemon": "^3.1.7"
+    "format": "^0.2.2",
+    "nodemon": "^3.1.7",
+    "path": "^0.12.7"
   }
 }

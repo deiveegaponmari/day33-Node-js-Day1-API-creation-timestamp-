@@ -1,5 +1,0 @@
-This is current date and timeThis is current date and timeThis is current date and timeThis is current date and timeThis is current date and timeThis is current date and timeThis is current date and timefunction timestamp(){
-const currentdate=new Date();
-const timestamp=currentdate.getTime();
-return timestamp;
-}This is current date and time1731744305757This is current date and time1731744364407This is current date and time1731744469784This is current date and time1731744506916This is current date and time1731744603412This is current date and time1731744754161
