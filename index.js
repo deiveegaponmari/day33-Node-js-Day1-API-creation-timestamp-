@@ -1,38 +1,54 @@
-const { error } = require('console');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const web_server = express();
-//folder to store file
-const folder=path.join(__dirname,'data');
-if(!fs.existsSync(folder)){
-    fs.mkdirSync(folder)
-}
+//folder name
+const foldername='data';
+//middleare to parse json requests
+web_server.use(express.json());
+
+const ensurefolderexists=(folder)=>{
+    if(!fs.existsSync(folder)){
+        fs.mkdirSync(folder,{recursive:true});
+    }
+};
+
+
 //API to create new text file
 web_server.post('/createfile',(req,res)=>{
-    const timestamp=new Date();
-    const filename=`${timestamp}`.txt;
-    const content=`current timestamp is: ${timestamp}`;
-    fs.writeFile(path.join(folder,filename),content,(err)=>{
+    ensurefolderexists(foldername);
+    //generate timestamp
+const timestamp=new Date().toISOString();
+const filename=`${timestamp.replace(/:/g,"-")}.txt`;
+const filepath=path.join(foldername,filename);
+
+   //filestamp for file content
+    fs.writeFileSync(filepath,timestamp,(err)=>{
         if(err){
             return res.status(500).json({error:"failed to create file"})
         }
-        res.status(200).json({message:'file created',filename})
+        res.status(200).json(
+            {message:'file created',
+            filename:filename,
+        content:timestamp})
     })
 
 });
 //API to retrieve all files
 web_server.get('/get-files',(res,req)=>{
-    fs.readdir(folder,(err,files)=>{
+    ensurefolderexists(foldername);
+    fs.readdir(foldername,(err,files)=>{
         if(err){
             return res.status(500).json({error:"failed to retrieve files"})
         }
         //filter any file
-        const textfiles=files.filter(file=>file.endsWith('.txt'))
-        res.status(200).json({files:textfiles})
+        //const textfiles=files.filter(file=>file.endsWith('.txt'))
+        res.status(200).json({
+            files:files,
+        })
     })
 })
-
+//start server
 web_server.listen(3000,"localhost",()=>{
     console.log("server started");
     console.log("http://localhost:3000/");
